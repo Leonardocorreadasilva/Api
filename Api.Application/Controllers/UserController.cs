@@ -1,4 +1,5 @@
-﻿using Api.Domain.Interfaces.Services.User;
+﻿using Api.Domain.Entities;
+using Api.Domain.Interfaces.Services.User;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -11,7 +12,7 @@ namespace Api.Application.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
         public UserController(IUserService userService)
         {
 
@@ -19,7 +20,7 @@ namespace Api.Application.Controllers
 
         }
         [HttpGet]
-        public async Task<ActionResult> GetAll([FromServices] IUserService service)
+        public async Task<ActionResult> GetAll()
         {
             if (!ModelState.IsValid)
             {
@@ -27,7 +28,7 @@ namespace Api.Application.Controllers
             }
             try
             {
-                return Ok(service.GetAll());
+                return Ok(await _userService.GetAll());
             }
             catch (ArgumentException ex) 
             {
@@ -36,12 +37,12 @@ namespace Api.Application.Controllers
         }
 
         [HttpGet]
-        [Route("{id", Name = "GetWithId")]
-        public async Task<ActionResult> Get(Guid id, [FromServices] IUserService service)
+        [Route("{id}", Name = "GetWithId")]
+        public async Task<ActionResult> Get(Guid id)
         {
             try
             {
-                return Ok(service.Get(id));
+                return Ok(await _userService.Get(id));
             }
 
             catch (ArgumentException ex) 
@@ -51,11 +52,62 @@ namespace Api.Application.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(Guid id, [FromServices] IUserService service)
+
+        public async Task<ActionResult> Delete(Guid id)
         {
             try
             {
-                return Ok(service.Delete(id));
+                return Ok (await _userService.Delete(id));
+            }
+            catch (ArgumentException ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Post([FromServices] IUserService userService, [FromBody] UserEntity user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try 
+            {
+                var result = await userService.Post(user);
+                if (result != null)
+                {
+                    return Created(new Uri(Url.Link("GetWithId", new { id = result.Id })), result);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (ArgumentException ex) 
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Put([FromServices] IUserService userService, [FromBody] UserEntity user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var result = await userService.Put(user);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
             catch (ArgumentException ex)
             {
