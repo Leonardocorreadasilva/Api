@@ -14,6 +14,8 @@ namespace Api.Data.Mapping
             builder.HasIndex(t => t.Email);
             builder.Property(t => t.Email).IsRequired().HasMaxLength(100);
             builder.Property(t => t.Nome).IsRequired().HasMaxLength(60);
+            //builder.Property(t => t.Password).IsRequired().HasMaxLength(60);
+            //builder.Property(t => t.Address).IsRequired();
             
         }
     }
