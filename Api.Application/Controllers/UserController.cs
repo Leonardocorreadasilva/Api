@@ -2,6 +2,7 @@
 using Api.Domain.Interfaces.Services.User;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Request;
 using System.Net;
 using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
@@ -66,7 +67,7 @@ namespace Api.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromServices] IUserService userService, [FromBody] UserEntity user)
+        public async Task<ActionResult> Post([FromServices] IUserService userService, [FromBody] UserRequest user)
         {
             if (!ModelState.IsValid)
             {

@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Api.Domain.Entities;
+﻿using Api.Domain.Entities;
 using Api.Domain.Interface;
 using Api.Domain.Interfaces.Services.User;
+using Shared.Request;
 
 namespace Api.Services.Services
 {
     public class UserService : IUserService
     {
-        private IRepository<UserEntity> _repository;
+        private readonly IRepository<UserEntity> _repository;
         public UserService(IRepository<UserEntity> repository) {
 
             _repository = repository;
@@ -31,9 +28,23 @@ namespace Api.Services.Services
             return await _repository.SelectAsync();
         }
 
-        public Task<UserEntity> Post(UserEntity user)
+        public Task<UserEntity> Post(UserRequest user)
         {
-            return _repository.InsertAsync(user);
+            UserEntity userEntity = new()
+            {
+                Nome = user.Nome,
+                Email = user.Email,
+                Password = user.Password
+            };
+            userEntity.Address.Street = user.Address.Street;
+            userEntity.Address.Number = user.Address.Number;
+            userEntity.Address.PostalCode = user.Address.PostalCode;
+            userEntity.Address.City = user.Address.City;
+            userEntity.Address.State = user.Address.State;
+            userEntity.Address.Country = user.Address.Country;
+
+            //_repository.InsertAsync(userEntity.Address);
+            return _repository.InsertAsync(userEntity);
         }
 
         public async Task<UserEntity> Put(UserEntity user)

@@ -15,6 +15,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Api.Data\Api.Data.csproj" />
     <ProjectReference Include="..\Api.Domain\Api.Domain.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Shared\" />
   </ItemGroup>
 
 </Project>
