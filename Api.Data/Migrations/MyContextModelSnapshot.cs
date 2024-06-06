@@ -66,7 +66,7 @@ namespace Api.Data.Migrations
 
                     b.HasIndex("Street");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("Address", (string)null);
                 });
 
             modelBuilder.Entity("Api.Domain.Entities.UserEntity", b =>

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Data.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20240605004748_UserMigration")]
+    [Migration("20240605233931_UserMigration")]
     partial class UserMigration
     {
         /// <inheritdoc />
@@ -69,7 +69,7 @@ namespace Api.Data.Migrations
 
                     b.HasIndex("Street");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("Address", (string)null);
                 });
 
             modelBuilder.Entity("Api.Domain.Entities.UserEntity", b =>

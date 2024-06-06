@@ -7,49 +7,53 @@ namespace Api.Services.Services
 {
     public class UserService : IUserService
     {
-        private readonly IRepository<UserEntity> _repository;
-        public UserService(IRepository<UserEntity> repository) {
+        private readonly IRepository<UserEntity> _userRepository;
+        private readonly IRepository<AddressEntity> _addressRepository;
+        public UserService(IRepository<UserEntity> userRepository, IRepository<AddressEntity> addressRepository) {
 
-            _repository = repository;
+            _userRepository = userRepository;
+            _addressRepository = addressRepository;
 
         }
         public async Task<bool> Delete(Guid id)
         {
-            return await _repository.DeleteAsync(id);
+            return await _userRepository.DeleteAsync(id);
         }
 
         public async Task<UserEntity> Get(Guid id)
         {
-            return await _repository.SelectAsync(id);
+            return await _userRepository.SelectAsync(id);
         }
 
         public async Task<IEnumerable<UserEntity>> GetAll()
         {
-            return await _repository.SelectAsync();
+            return await _userRepository.SelectAsync();
         }
 
         public Task<UserEntity> Post(UserRequest user)
         {
+            AddressEntity address = new AddressEntity();
+            address.Street = user.Address.Street;
+            address.Number = user.Address.Number;
+            address.PostalCode = user.Address.PostalCode;
+            address.City = user.Address.City;
+            address.State = user.Address.State;
+            address.Country = user.Address.Country;
+            var addressComit = _addressRepository.InsertAsync(address);
             UserEntity userEntity = new()
             {
                 Nome = user.Nome,
                 Email = user.Email,
-                Password = user.Password
+                Password = user.Password,
+                AddressId = addressComit.Result.Id,
             };
-            userEntity.Address.Street = user.Address.Street;
-            userEntity.Address.Number = user.Address.Number;
-            userEntity.Address.PostalCode = user.Address.PostalCode;
-            userEntity.Address.City = user.Address.City;
-            userEntity.Address.State = user.Address.State;
-            userEntity.Address.Country = user.Address.Country;
-
-            //_repository.InsertAsync(userEntity.Address);
-            return _repository.InsertAsync(userEntity);
+            
+            return _userRepository.InsertAsync(userEntity);
         }
 
         public async Task<UserEntity> Put(UserEntity user)
         {
-            return await _repository.UpdateAsync(user);
+            return await _userRepository.UpdateAsync(user);
         }
     }
 }

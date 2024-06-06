@@ -12,6 +12,7 @@ namespace Api.Domain.Interface.Service.User
     {
         Task<AddressEntity> Get(Guid id);
         Task<IEnumerable<AddressEntity>> GetAll();
+        Task<AddressEntity> GetByCodeAndNumber(string postalCode, int Number);
         Task<AddressEntity> Post(AddressRequest address);
         Task<AddressEntity> Put(AddressRequest address);
         Task<bool> Delete(Guid id);

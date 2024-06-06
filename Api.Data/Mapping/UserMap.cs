@@ -27,7 +27,7 @@ namespace Api.Data.Mapping
             // Configure foreign key
             builder.HasOne(u => u.Address)
                 .WithMany()
-                .HasForeignKey(u => u.AddressId)
+                .HasForeignKey(u => u.Id)
                 .IsRequired();
         }
     }

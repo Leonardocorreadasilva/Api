@@ -8,7 +8,7 @@ namespace Api.Data.Mapping
     {
         public void Configure(EntityTypeBuilder<AddressEntity> builder)
         {
-            builder.ToTable("User");
+            builder.ToTable("Address");
 
             builder.HasKey(t => t.Id);
             builder.HasIndex(t => t.Street);

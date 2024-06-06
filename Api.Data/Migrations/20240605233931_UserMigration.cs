@@ -15,7 +15,7 @@ namespace Api.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "User",
+                name: "Address",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -35,7 +35,7 @@ namespace Api.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Address", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -58,17 +58,17 @@ namespace Api.Data.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_User_AddressId",
+                        name: "FK_Users_Address_AddressId",
                         column: x => x.AddressId,
-                        principalTable: "User",
+                        principalTable: "Address",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_User_Street",
-                table: "User",
+                name: "IX_Address_Street",
+                table: "Address",
                 column: "Street");
 
             migrationBuilder.CreateIndex(
@@ -84,7 +84,7 @@ namespace Api.Data.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Address");
         }
     }
 }
