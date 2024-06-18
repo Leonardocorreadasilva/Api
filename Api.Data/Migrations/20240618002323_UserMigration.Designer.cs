@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Data.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20240605233931_UserMigration")]
+    [Migration("20240618002323_UserMigration")]
     partial class UserMigration
     {
         /// <inheritdoc />
@@ -67,9 +67,46 @@ namespace Api.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Street");
+                    b.ToTable("address", (string)null);
+                });
 
-                    b.ToTable("Address", (string)null);
+            modelBuilder.Entity("Api.Domain.Entities.ProductEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("AddressId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("CreateAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdateAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("product", (string)null);
                 });
 
             modelBuilder.Entity("Api.Domain.Entities.UserEntity", b =>
@@ -104,20 +141,7 @@ namespace Api.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId");
-
-                    b.ToTable("Users", (string)null);
-                });
-
-            modelBuilder.Entity("Api.Domain.Entities.UserEntity", b =>
-                {
-                    b.HasOne("Api.Domain.Entities.AddressEntity", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Address");
+                    b.ToTable("users", (string)null);
                 });
 #pragma warning restore 612, 618
         }

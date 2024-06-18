@@ -43,7 +43,6 @@ namespace Api.Data.Repository
         }
 
         public async Task<T> InsertAsync(T item)
-
         {
             try
             {
@@ -51,17 +50,21 @@ namespace Api.Data.Repository
                 {
                     item.Id = Guid.NewGuid();
                 }
+
                 item.CreateAt = DateTime.UtcNow;
                 _dataset.Add(item);
 
                 await _context.SaveChangesAsync();
+
+                return item; // Retorna o item após a inserção bem-sucedida
             }
             catch (Exception ex)
             {
-                throw ex;
+                // Tratamento adequado da exceção, como log ou lançamento de uma exceção personalizada
+                throw new Exception("Erro ao inserir o item no banco de dados", ex);
             }
-            return item;
         }
+
 
         public async Task<bool> ExistAsync(Guid id)
         {

@@ -8,26 +8,23 @@ namespace Api.Data.Mapping
     {
         public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
-            builder.ToTable("Users");
+            builder.ToTable("users");
 
             builder.HasKey(u => u.Id);
 
             builder.Property(u => u.Nome)
-                .IsRequired()
-                .HasMaxLength(100);
+                   .IsRequired()
+                   .HasMaxLength(100);
 
             builder.Property(u => u.Email)
-                .IsRequired()
-                .HasMaxLength(100);
+                   .IsRequired()
+                   .HasMaxLength(100);
 
             builder.Property(u => u.Password)
-                .IsRequired()
-                .HasMaxLength(100);
+                   .IsRequired()
+                   .HasMaxLength(100);
 
-            // Configure foreign key
-            builder.HasOne(u => u.Address)
-                .WithMany()
-                .HasForeignKey(u => u.Id)
+            builder.Property(u => u.AddressId)
                 .IsRequired();
         }
     }

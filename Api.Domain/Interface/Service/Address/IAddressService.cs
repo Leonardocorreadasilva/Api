@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Api.Domain.Interface.Service.User
+namespace Api.Domain.Interface.Service.Address
 {
     public interface IAddressService
     {

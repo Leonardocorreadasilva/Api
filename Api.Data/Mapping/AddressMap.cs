@@ -8,17 +8,32 @@ namespace Api.Data.Mapping
     {
         public void Configure(EntityTypeBuilder<AddressEntity> builder)
         {
-            builder.ToTable("Address");
+            builder.ToTable("address");
 
-            builder.HasKey(t => t.Id);
-            builder.HasIndex(t => t.Street);
-            builder.Property(t => t.Street).IsRequired().HasMaxLength(100);
-            builder.Property(t => t.City).IsRequired().HasMaxLength(60);
-            builder.Property(t => t.State).IsRequired().HasMaxLength(60);
-            builder.Property(t => t.Country).IsRequired().HasMaxLength(60);
-            builder.Property(t => t.PostalCode).IsRequired().HasMaxLength(60);
-            //builder.Property(t => t.Address).IsRequired();
+            builder.HasKey(a => a.Id);
 
+            builder.Property(a => a.Street)
+                   .IsRequired()
+                   .HasMaxLength(100);
+
+            builder.Property(a => a.City)
+                   .IsRequired()
+                   .HasMaxLength(60);
+
+            builder.Property(a => a.State)
+                   .IsRequired()
+                   .HasMaxLength(60);
+
+            builder.Property(a => a.PostalCode)
+                   .IsRequired()
+                   .HasMaxLength(60);
+
+            builder.Property(a => a.Number)
+                   .IsRequired();
+
+            builder.Property(a => a.Country)
+                   .IsRequired()
+                   .HasMaxLength(60);
         }
     }
 }

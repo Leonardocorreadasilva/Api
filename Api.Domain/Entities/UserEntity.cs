@@ -5,9 +5,7 @@
         public string Nome { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-
         public Guid AddressId { get; set; }
         // Propriedade de navegação para a entidade AddressEntity
-        public AddressEntity Address { get; set; }
     }
 }

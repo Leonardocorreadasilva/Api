@@ -1,4 +1,5 @@
 ﻿using Api.Domain.Entities;
+using Api.Domain.Interface.Service.Product;
 using Api.Domain.Interfaces.Services.User;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +12,17 @@ namespace Api.Application.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class ProductController : ControllerBase
     {
-        private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private string versao = "v1";
+        private readonly IProductService _productService;
+        public ProductController(IProductService productService)
         {
 
-            _userService = userService;
+            _productService = productService;
 
         }
+        [Route("v1/pegarGeral")]
         [HttpGet]
         public async Task<ActionResult> GetAll()
         {
@@ -29,7 +32,7 @@ namespace Api.Application.Controllers
             }
             try
             {
-                return Ok(await _userService.GetAll());
+                return Ok(null); //await _productService.GetAll());
             }
             catch (ArgumentException ex) 
             {
@@ -43,7 +46,7 @@ namespace Api.Application.Controllers
         {
             try
             {
-                return Ok(await _userService.Get(id));
+                return Ok(null); //await _productService.Get(id));
             }
 
             catch (ArgumentException ex) 
@@ -58,7 +61,7 @@ namespace Api.Application.Controllers
         {
             try
             {
-                return Ok (await _userService.Delete(id));
+                return null; //Ok (await _productService.Delete(id));
             }
             catch (ArgumentException ex)
             {
@@ -66,8 +69,9 @@ namespace Api.Application.Controllers
             }
         }
 
+        [Route("v1/Create")]
         [HttpPost]
-        public async Task<ActionResult> Post(UserRequest user)
+        public async Task<ActionResult> CreateProduct([FromServices]  IProductService _productService, ProductRequest product)
         {
             if (!ModelState.IsValid)
             {
@@ -75,7 +79,7 @@ namespace Api.Application.Controllers
             }
             try 
             {
-                var result = await _userService.Post(user);
+                var result = await _productService.Create(product);
                 if (result != null)
                 {
                     return Created(new Uri(Url.Link("GetWithId", new { id = result.Id })), result);

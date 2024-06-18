@@ -1,6 +1,6 @@
 ﻿using Api.Domain.Entities;
 using Api.Domain.Interface;
-using Api.Domain.Interface.Service.User;
+using Api.Domain.Interface.Service.Address;
 using Api.Domain.Interfaces.Services.User;
 using Shared.Request;
 using System;
@@ -13,15 +13,26 @@ namespace Api.Service.Service
 {
     public class AddressService : IAddressService
     {
-        private readonly IRepository<AddressEntity> _addressRepository;
+        private readonly IRepository<AddressEntity> GetAll;
         public AddressService(IRepository<AddressEntity> addressRepository) 
         {
-            _addressRepository = addressRepository;
+            GetAll = addressRepository;
         }
 
-        public async Task<AddressEntity> GetByCodeAndNumber(string postalCode, int Number)
+        public async Task<AddressEntity> GetByCodeAndNumber(string postalCode, int number)
         {
-            return await _addressRepository.
+            var addresses = await GetAll.SelectAsync();
+
+            // Retornará null se não encontrar nenhum endereço correspondente
+            return addresses.FirstOrDefault(address => address.PostalCode == postalCode && address.Number == number);
+        }
+
+
+
+
+        async Task<IEnumerable<AddressEntity>> IAddressService.GetAll()
+        {
+            return await GetAll.SelectAsync();
         }
 
         Task<bool> IAddressService.Delete(Guid id)
@@ -31,13 +42,10 @@ namespace Api.Service.Service
 
          async Task<AddressEntity> IAddressService.Get(Guid id)
         {
-            return await _addressRepository.SelectAsync(id);
+            return await GetAll.SelectAsync(id);
         }
 
-        async Task<IEnumerable<AddressEntity>> IAddressService.GetAll()
-        {
-            return  await _addressRepository.SelectAsync();
-        }
+        
 
 
 

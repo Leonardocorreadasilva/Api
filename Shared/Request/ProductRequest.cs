@@ -4,16 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Api.Domain.Entities
+namespace Shared.Request
 {
-    public class ProductEntity : BaseEntity
+    public class ProductRequest
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public int Stock {  get; set; }
+        public int Stock { get; set; }
         public decimal Price { get; set; }
         public Guid AddressId { get; set; }
         public Guid UserId { get; set; }
-        //public ProductCategoryEntity productCategory { get; set; }
     }
 }

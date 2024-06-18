@@ -8,6 +8,7 @@ namespace Api.Data.Context
     {
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<AddressEntity> Addresses { get; set; }
+        public DbSet<ProductEntity> Products { get; set; }
 
         public MyContext(DbContextOptions<MyContext> options) : base(options) { }
 
@@ -18,10 +19,12 @@ namespace Api.Data.Context
             // Specify table names
             modelBuilder.Entity<UserEntity>().ToTable("Users");
             modelBuilder.Entity<AddressEntity>().ToTable("Addresses");
+            modelBuilder.Entity<ProductEntity>().ToTable("Products");
 
             // Apply entity mappings
             modelBuilder.ApplyConfiguration(new UserMap());
             modelBuilder.ApplyConfiguration(new AddressMap());
+            modelBuilder.ApplyConfiguration(new ProductMap());
         }
 
     }
