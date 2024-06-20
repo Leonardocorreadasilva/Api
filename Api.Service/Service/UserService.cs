@@ -6,17 +6,11 @@ using Shared.Request;
 
 namespace Api.Services.Services
 {
-    public class UserService : IUserService
+    public class UserService(IRepository<UserEntity> userRepository, IRepository<AddressEntity> addressRepository, IAddressService addressService) : IUserService
     {
-            private readonly IRepository<UserEntity> _userRepository;
-            private readonly IRepository<AddressEntity> _addressRepository;
+            private readonly IRepository<UserEntity> _userRepository = userRepository;
+            private readonly IRepository<AddressEntity> _addressRepository = addressRepository;
 
-        public UserService(IRepository<UserEntity> userRepository, IRepository<AddressEntity> addressRepository, IAddressService addressService) {
-
-            _userRepository = userRepository;
-            _addressRepository = addressRepository;
-
-        }
         public async Task<bool> Delete(Guid id)
         {
             return await _userRepository.DeleteAsync(id);
@@ -61,7 +55,7 @@ namespace Api.Services.Services
             Nome = user.Nome,
             Email = user.Email,
             Password = user.Password,
-            AddressId = insertedAddress.Id // Usar o ID do endereço inserido
+            Address = address // Usar o ID do endereço inserido
         };
 
         // Inserir o usuário no banco de dados
@@ -74,11 +68,24 @@ namespace Api.Services.Services
 }
 
 
-
-
         public async Task<UserEntity> Put(UserEntity user)
         {
             return await _userRepository.UpdateAsync(user);
+        }
+
+        public async Task<UserEntity> Auth(AuthRequest auth)
+        {
+            // Método de autenticação pode usar o método privado FindUserByNameAndPasswordAsync
+            return await FindUserByNameAndPasswordAsync(auth);
+        }
+
+        private async Task<UserEntity> FindUserByNameAndPasswordAsync(AuthRequest auth)
+        {
+
+            var user = await _userRepository.SelectAsync();
+            
+                
+            return user.FirstOrDefault(user => user.Email == auth.email && user.Password == auth.password);
         }
     }
 }

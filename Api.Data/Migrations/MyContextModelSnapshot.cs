@@ -70,10 +70,6 @@ namespace Api.Data.Migrations
             modelBuilder.Entity("Api.Domain.Entities.ProductEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("AddressId")
                         .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("CreateAt")
@@ -98,9 +94,6 @@ namespace Api.Data.Migrations
                     b.Property<DateTime>("UpdateAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
                     b.HasKey("Id");
 
                     b.ToTable("product", (string)null);
@@ -109,10 +102,6 @@ namespace Api.Data.Migrations
             modelBuilder.Entity("Api.Domain.Entities.UserEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("AddressId")
                         .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("CreateAt")
@@ -139,6 +128,36 @@ namespace Api.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("Api.Domain.Entities.ProductEntity", b =>
+                {
+                    b.HasOne("Api.Domain.Entities.AddressEntity", "Address")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Api.Domain.Entities.UserEntity", "user")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("Api.Domain.Entities.UserEntity", b =>
+                {
+                    b.HasOne("Api.Domain.Entities.AddressEntity", "Address")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
                 });
 #pragma warning restore 612, 618
         }

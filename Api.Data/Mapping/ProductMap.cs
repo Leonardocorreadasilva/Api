@@ -26,8 +26,15 @@ namespace Api.Data.Mapping
                    .IsRequired()
                    .HasColumnType("decimal(18,2)");
 
-            builder.Property(p => p.UserId)
-                   .IsRequired();
+            builder.HasOne(u => u.user)
+                .WithMany()
+                .HasForeignKey(u => u.Id)
+                .IsRequired();
+
+            builder.HasOne(u => u.Address)
+                .WithMany()
+                .HasForeignKey(u => u.Id)
+                .IsRequired();
         }
     }
 }

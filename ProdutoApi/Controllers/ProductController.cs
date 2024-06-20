@@ -22,23 +22,6 @@ namespace Api.Application.Controllers
             _productService = productService;
 
         }
-        [Route("v1/pegarGeral")]
-        [HttpGet]
-        public async Task<ActionResult> GetAll()
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            try
-            {
-                return Ok(null); //await _productService.GetAll());
-            }
-            catch (ArgumentException ex) 
-            {
-                return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
 
         [HttpGet]
         [Route("{id}", Name = "GetWithId")]
@@ -55,8 +38,25 @@ namespace Api.Application.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [Route("v1/GetAll")]
+        [HttpGet]
+        public async Task<ActionResult> GetAll()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                return Ok(null); //await _productService.GetAll());
+            }
+            catch (ArgumentException ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
 
+        [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(Guid id)
         {
             try
@@ -82,7 +82,7 @@ namespace Api.Application.Controllers
                 var result = await _productService.Create(product);
                 if (result != null)
                 {
-                    return Created(new Uri(Url.Link("GetWithId", new { id = result.Id })), result);
+                    return Ok(Created(new Uri(Url.Link("GetWithId", new { id = result.Id })), result));
                 }
                 else
                 {

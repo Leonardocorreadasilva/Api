@@ -13,4 +13,6 @@ namespace Shared.Request
         public string Password { get; set; }
         public AddressRequest Address { get; set; }
     }
+
+    
 }

@@ -17,14 +17,20 @@ namespace Api.Data.Mapping
                    .HasMaxLength(100);
 
             builder.Property(u => u.Email)
-                   .IsRequired()
-                   .HasMaxLength(100);
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+            builder.HasIndex(u => u.Email)
+                   .IsUnique();
+
 
             builder.Property(u => u.Password)
                    .IsRequired()
                    .HasMaxLength(100);
 
-            builder.Property(u => u.AddressId)
+            builder.HasOne(u => u.Address)
+                .WithMany()
+                .HasForeignKey(u => u.Id)
                 .IsRequired();
         }
     }

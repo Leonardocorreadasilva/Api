@@ -26,10 +26,6 @@ namespace Api.Service.Service
             // Retornará null se não encontrar nenhum endereço correspondente
             return addresses.FirstOrDefault(address => address.PostalCode == postalCode && address.Number == number);
         }
-
-
-
-
         async Task<IEnumerable<AddressEntity>> IAddressService.GetAll()
         {
             return await GetAll.SelectAsync();

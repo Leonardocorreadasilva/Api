@@ -13,6 +13,9 @@ namespace Api.Domain.Interface.Service.Product
         //Task<ProductEntity> Rating(ProductEntity product);
         Task<ProductEntity> Create(ProductRequest produto);
         Task<ProductEntity> Edit(ProductEntity product);
+        Task<UserEntity> Get(Guid id);
+        Task<IEnumerable<UserEntity>> GetAll();
+        Task<bool> Delete(Guid id);
 
     }
 }

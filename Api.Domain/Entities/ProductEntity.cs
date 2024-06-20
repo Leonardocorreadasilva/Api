@@ -12,8 +12,8 @@ namespace Api.Domain.Entities
         public string Description { get; set; }
         public int Stock {  get; set; }
         public decimal Price { get; set; }
-        public Guid AddressId { get; set; }
-        public Guid UserId { get; set; }
+        public AddressEntity Address { get; set; }
+        public UserEntity user { get; set; }
         //public ProductCategoryEntity productCategory { get; set; }
     }
 }

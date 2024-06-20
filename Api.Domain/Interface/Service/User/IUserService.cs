@@ -11,6 +11,7 @@ namespace Api.Domain.Interfaces.Services.User
     public interface IUserService
     {
         Task<UserEntity> Get(Guid id);
+        Task<UserEntity> Auth(AuthRequest auth);
         Task<IEnumerable<UserEntity>> GetAll();
         Task<UserEntity> Post(UserRequest user);
         Task<UserEntity> Put(UserEntity user);
