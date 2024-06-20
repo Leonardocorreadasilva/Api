@@ -10,6 +10,7 @@ namespace Api.Services.Services
     {
             private readonly IRepository<UserEntity> _userRepository = userRepository;
             private readonly IRepository<AddressEntity> _addressRepository = addressRepository;
+        
 
         public async Task<bool> Delete(Guid id)
         {
@@ -27,45 +28,60 @@ namespace Api.Services.Services
         }
 
         public async Task<UserEntity> Post(UserRequest user)
-{
-    try
-    {
-        AddressEntity address = new AddressEntity()
         {
-            Street = user.Address.Street,
-            Number = user.Address.Number,
-            PostalCode = user.Address.PostalCode,
-            City = user.Address.City,
-            State = user.Address.State,
-            Country = user.Address.Country
-        };
+            try
+            {
+                // Verificar se o endereço já existe
+                AddressEntity existingAddress = await addressService.GetByCodeAndNumber(user.Address.PostalCode, user.Address.Number);
 
-        // Inserir o endereço no banco de dados
-        var insertedAddress = await _addressRepository.InsertAsync(address);
-        
-        // Verificar se o endereço foi inserido corretamente
-        if (insertedAddress == null || insertedAddress.Id == Guid.Empty)
-        {
-            throw new Exception("Falha ao inserir o endereço no banco de dados.");
+                AddressEntity address;
+
+                if (existingAddress != null)
+                {
+                    address = existingAddress; // Reutilizar endereço existente
+                }
+                else
+                {
+                    address = new AddressEntity()
+                    {
+                        Street = user.Address.Street,
+                        Number = user.Address.Number,
+                        PostalCode = user.Address.PostalCode,
+                        City = user.Address.City,
+                        State = user.Address.State,
+                        Country = user.Address.Country
+                    };
+
+                    // Inserir o novo endereço no banco de dados
+                    var insertedAddress = await _addressRepository.InsertAsync(address);
+
+                    // Verificar se o endereço foi inserido corretamente
+                    if (insertedAddress == null || insertedAddress.Id == Guid.Empty)
+                    {
+                        throw new Exception("Falha ao inserir o endereço no banco de dados.");
+                    }
+
+                    address = insertedAddress;
+                }
+
+                // Agora podemos usar o ID do endereço inserido ou existente
+                UserEntity userEntity = new UserEntity()
+                {
+                    Nome = user.Nome,
+                    Email = user.Email,
+                    Password = user.Password,
+                    Address = address // Usar o ID do endereço existente ou inserido
+                };
+
+                // Inserir o usuário no banco de dados
+                return await _userRepository.InsertAsync(userEntity);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao inserir o usuário no banco de dados", ex);
+            }
         }
 
-        // Agora podemos usar o ID do endereço inserido
-        UserEntity userEntity = new UserEntity()
-        {
-            Nome = user.Nome,
-            Email = user.Email,
-            Password = user.Password,
-            Address = address // Usar o ID do endereço inserido
-        };
-
-        // Inserir o usuário no banco de dados
-        return await _userRepository.InsertAsync(userEntity);
-    }
-    catch (Exception ex)
-    {
-        throw new Exception("Erro ao inserir o usuário no banco de dados", ex);
-    }
-}
 
 
         public async Task<UserEntity> Put(UserEntity user)
