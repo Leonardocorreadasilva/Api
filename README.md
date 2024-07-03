@@ -31,3 +31,8 @@ As operações CRUD podem ser realizadas em cada recurso usando os seguintes mé
 - Pedidos: `/pedidos`
 - Pagamentos: `/pedidos/{pedidoId}/pagamentos`
 - Mensagens: `/mensagens`
+
+## Brainsorm
+
+![alt text](https://github.com/Leonardocorreadasilva/Api/blob/master/image1.png)
+
