@@ -1,4 +1,8 @@
-# Introdução
+# Avaliacao 1 - Arquitetura de Software
+## Alunos
+- Leonardo Correa da Silva
+- Paulo Ricardo Novaes Lisecki
+## Introdução
 
 Esta documentação descreve as operações CRUD (Criar, Ler, Atualizar, Excluir) que podem ser realizadas na API de uma aplicação estilo e-commerce. A API permite que usuários gerenciem produtos, carrinhos de compras, pedidos e outras funcionalidades comuns em plataformas de e-commerce.
 
