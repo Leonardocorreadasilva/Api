@@ -15,7 +15,7 @@ namespace Api.Application.Controllers
     public class UserController(IUserService userService) : ControllerBase
     {
 
-        [HttpPost]
+        [HttpPost("v1/Post")]
         public async Task<ActionResult> Post(UserRequest user)
         {
             if (!ModelState.IsValid)
@@ -27,7 +27,7 @@ namespace Api.Application.Controllers
                 var result = await userService.Post(user);
                 if (result != null)
                 {
-                    return Created(new Uri(Url.Link("GetWithId", new { id = result.Id })), result);
+                    return Created(new Uri(Url.Link("GetWithId", new { id = result.IdUser })), result);
                 }
                 else
                 {
@@ -38,26 +38,6 @@ namespace Api.Application.Controllers
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
-        }
-
-        [Route("v1/Auth")]
-        [HttpPost]
-        public async Task<ActionResult> Auth(AuthRequest auth)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            try
-            {
-                return Ok(await userService.Auth(auth));
-            }
-
-            catch (ArgumentException ex)
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
-
         }
 
         [Route("v1/GetAll")]
@@ -78,8 +58,7 @@ namespace Api.Application.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("{id}", Name = "GetWithId")]
+        [HttpGet("{id}/v1/GetWithId")]
         public async Task<ActionResult> Get(Guid id)
         {
             try
@@ -93,7 +72,7 @@ namespace Api.Application.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}/v1/Delete")]
         public async Task<ActionResult> Delete(Guid id)
         {
             try
@@ -106,8 +85,8 @@ namespace Api.Application.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult> Put(UserEntity user)
+        [HttpPut("v1/Put")]
+        public async Task<ActionResult> Put(UserRequest user)
         {
             if (!ModelState.IsValid)
             {

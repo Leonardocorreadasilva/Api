@@ -7,42 +7,76 @@ namespace Api.Service.Service
 {
 
 
-    public class ProductService(IRepository<UserEntity> userRepository, IRepository<AddressEntity> addressRepository, IRepository<ProductEntity> productService, IRepository<UserEntity> userService) : IProductService
+    public class ProductService(IRepository<AddressEntity> addressRepository,
+        IRepository<ProductEntity> productService,
+        IRepository<UserEntity> userService, IRepository<ProductCategoryEntity> category) : IProductService
     {
-        public async Task<ProductEntity> Create(ProductRequest produto)  
+        public async Task<ProductEntity> Create(ProductRequest produto)
         {
 
             var user = await userService.SelectAsync(produto.UserId);
+            if (user == null)
+            {
+                throw new Exception("Usuário não encontrado.");
+            }
             var address = await addressRepository.SelectAsync(produto.AddressId);
+            if (address == null)
+            {
+                throw new Exception("Endereço não encontrado.");
+            }
 
-            ProductEntity product = new ProductEntity();
-            product.Name = produto.Name;
-            product.Description = produto.Description;
-            product.Price = produto.Price;
-            product.Stock = produto.Stock;
-            product.user = user;
-            product.Address = address;
+            var productCategory = await category.SelectAsync(produto.ProductCategoryId);
+
+            ProductEntity product = new ProductEntity
+            {
+                Name = produto.Name,
+                Description = produto.Description,
+                Price = produto.Price,
+                Stock = produto.Stock,
+                User = user,
+                Address = address,
+                ProductCategory = productCategory
+            };
             return await productService.InsertAsync(product);
         }
 
-        Task<bool> IProductService.Delete(Guid id)
+        public async Task<ProductEntity> Edit(ProductEntity product)
         {
-            throw new NotImplementedException();
+            // Verificar se o usuário associado ao produto existe
+            var userExists = await userService.SelectAsync(product.User.Id);
+            if (userExists == null)
+            {
+                throw new Exception("Usuário não encontrado.");
+            }
+
+            // Verificar se o endereço associado ao produto existe
+            var addressExists = await addressRepository.SelectAsync(product.Address.Id);
+            if (addressExists == null)
+            {
+                throw new Exception("Endereço não encontrado.");
+            }
+
+            // Aqui você pode adicionar validações ou lógicas adicionais antes de atualizar o produto
+            return await productService.UpdateAsync(product);
         }
 
-        Task<ProductEntity> IProductService.Edit(ProductEntity product)
+        public async Task<bool> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            return await productService.DeleteAsync(id);
         }
 
-        Task<UserEntity> IProductService.Get(Guid id)
+
+
+        public async Task<ProductEntity> Get(Guid id)
         {
-            throw new NotImplementedException();
+            return await productService.SelectAsync(id);
         }
 
-        Task<IEnumerable<UserEntity>> IProductService.GetAll()
+        public async Task<IEnumerable<ProductEntity>> GetAll()
         {
-            throw new NotImplementedException();
+            return await productService.SelectAsync();
         }
+
+
     }
 }

@@ -16,22 +16,22 @@ namespace Api.Data.Mapping
                    .IsRequired()
                    .HasMaxLength(100);
 
+            builder.HasIndex(u => u.Email)
+                    .IsUnique();
+
             builder.Property(u => u.Email)
                     .IsRequired()
                     .HasMaxLength(100);
-
-            builder.HasIndex(u => u.Email)
-                   .IsUnique();
-
 
             builder.Property(u => u.Password)
                    .IsRequired()
                    .HasMaxLength(100);
 
             builder.HasOne(u => u.Address)
-                .WithMany()
-                .HasForeignKey(u => u.Id)
-                .IsRequired();
+         .WithMany() // Aqui você pode especificar a propriedade de navegação inversa se houver
+         .HasForeignKey(u => u.IdAddress) // Usando AddressId como FK
+         .IsRequired();
         }
     }
 }
+

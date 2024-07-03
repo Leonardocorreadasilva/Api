@@ -8,9 +8,13 @@ namespace Api.Domain.Entities
 {
     public class ReviewEntity : BaseEntity
     {
-        public UserEntity UserReview { get; set; }
+  
         public int Rating { get; set; }
         public string Coments { get; set; }
         public string Reviews { get; set; }
+        public UserEntity UserReview { get; set; }
+        public Guid UserReviewId { get; set; }
+        public ProductEntity ProductReview { get; set; }
+        public Guid ProductReviewId { get; set; }
     }
 }

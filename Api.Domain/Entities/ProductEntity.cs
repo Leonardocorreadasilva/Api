@@ -13,7 +13,10 @@ namespace Api.Domain.Entities
         public int Stock {  get; set; }
         public decimal Price { get; set; }
         public AddressEntity Address { get; set; }
-        public UserEntity user { get; set; }
-        //public ProductCategoryEntity productCategory { get; set; }
+        public Guid AddressId { get; set; }
+        public UserEntity User { get; set; }
+        public Guid UserId { get; set; }
+        public ProductCategoryEntity ProductCategory { get; set; }
+        public Guid ProductCategoryId { get; set; }
     }
 }

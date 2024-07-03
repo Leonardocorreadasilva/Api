@@ -1,45 +1,36 @@
 ﻿using Api.Domain.Entities;
 using Api.Domain.Interface.Service.Product;
-using Api.Domain.Interfaces.Services.User;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Request;
 using System.Net;
-using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace Api.Application.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductController(IProductService productService) : ControllerBase
     {
-        private string versao = "v1";
-        private readonly IProductService _productService;
-        public ProductController(IProductService productService)
-        {
+        private readonly IProductService _productService = productService;
 
-            _productService = productService;
-
-        }
-
-        [HttpGet]
-        [Route("{id}", Name = "GetWithId")]
+        [HttpGet("{id}/v1/GetWithId")]
         public async Task<ActionResult> Get(Guid id)
         {
             try
             {
-                return Ok(null); //await _productService.Get(id));
+                var product = await _productService.Get(id);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+                return Ok(product);
             }
-
-            catch (ArgumentException ex) 
+            catch (ArgumentException ex)
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
-        [Route("v1/GetAll")]
-        [HttpGet]
+        [HttpGet("v1/GetAll")]
         public async Task<ActionResult> GetAll()
         {
             if (!ModelState.IsValid)
@@ -48,7 +39,8 @@ namespace Api.Application.Controllers
             }
             try
             {
-                return Ok(null); //await _productService.GetAll());
+                var products = await _productService.GetAll();
+                return Ok(products);
             }
             catch (ArgumentException ex)
             {
@@ -56,12 +48,17 @@ namespace Api.Application.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}/v1/Delete")]
         public async Task<ActionResult> Delete(Guid id)
         {
             try
             {
-                return null; //Ok (await _productService.Delete(id));
+                var result = await _productService.Delete(id);
+                if (!result)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
             }
             catch (ArgumentException ex)
             {
@@ -69,34 +66,33 @@ namespace Api.Application.Controllers
             }
         }
 
-        [Route("v1/Create")]
-        [HttpPost]
-        public async Task<ActionResult> CreateProduct([FromServices]  IProductService _productService, ProductRequest product)
+        [HttpPost("v1/Create")]
+        public async Task<ActionResult> CreateProduct([FromBody] ProductRequest product)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            try 
+            try
             {
                 var result = await _productService.Create(product);
                 if (result != null)
                 {
-                    return Ok(Created(new Uri(Url.Link("GetWithId", new { id = result.Id })), result));
+                    return CreatedAtRoute("v1/GetWithId", new { id = result.Id }, result);
                 }
                 else
                 {
                     return BadRequest();
                 }
             }
-            catch (ArgumentException ex) 
+            catch (ArgumentException ex)
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
-        [HttpPut]
-        public async Task<ActionResult> Put([FromServices] IUserService userService, [FromBody] UserEntity user)
+        [HttpPut("v1/Put")]
+        public async Task<ActionResult> Put(ProductEntity product)
         {
             if (!ModelState.IsValid)
             {
@@ -104,7 +100,7 @@ namespace Api.Application.Controllers
             }
             try
             {
-                var result = await userService.Put(user);
+                var result = await _productService.Edit(product);
                 if (result != null)
                 {
                     return Ok(result);
@@ -119,6 +115,5 @@ namespace Api.Application.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
-
     }
 }

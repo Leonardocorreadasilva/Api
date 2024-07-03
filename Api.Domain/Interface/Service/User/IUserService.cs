@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Api.Domain.Entities;
 using Api.Domain.Interfaces.Services.User;
+using Iss.Data.ViewModels.Response.Usuarios;
 using Shared.Request;
 
 namespace Api.Domain.Interfaces.Services.User
@@ -13,8 +14,8 @@ namespace Api.Domain.Interfaces.Services.User
         Task<UserEntity> Get(Guid id);
         Task<UserEntity> Auth(AuthRequest auth);
         Task<IEnumerable<UserEntity>> GetAll();
-        Task<UserEntity> Post(UserRequest user);
-        Task<UserEntity> Put(UserEntity user);
+        Task<UserResponse> Post(UserRequest user);
+        Task<UserResponse> Put(UserRequest user);
         Task<bool> Delete(Guid id);
 
     }

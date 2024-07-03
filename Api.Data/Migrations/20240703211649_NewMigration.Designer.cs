@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Data.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20240619223045_UserMigration")]
-    partial class UserMigration
+    [Migration("20240703211649_NewMigration")]
+    partial class NewMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,9 +70,40 @@ namespace Api.Data.Migrations
                     b.ToTable("address", (string)null);
                 });
 
+            modelBuilder.Entity("Api.Domain.Entities.ProductCategoryEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("CreateAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime>("UpdateAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductCategory", (string)null);
+                });
+
             modelBuilder.Entity("Api.Domain.Entities.ProductEntity", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("AddressId")
                         .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("CreateAt")
@@ -91,20 +122,73 @@ namespace Api.Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid>("ProductCategoryId")
+                        .HasColumnType("char(36)");
+
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdateAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("ProductCategoryId");
+
+                    b.HasIndex("UserId");
+
                     b.ToTable("product", (string)null);
+                });
+
+            modelBuilder.Entity("Api.Domain.Entities.ReviewEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Coments")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<DateTime?>("CreateAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("ProductReviewId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reviews")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<DateTime>("UpdateAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("UserReviewId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductReviewId");
+
+                    b.HasIndex("UserReviewId");
+
+                    b.ToTable("Review", (string)null);
                 });
 
             modelBuilder.Entity("Api.Domain.Entities.UserEntity", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("CreateAt")
@@ -114,6 +198,9 @@ namespace Api.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
+
+                    b.Property<Guid>("IdAddress")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -130,6 +217,11 @@ namespace Api.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("IdAddress");
+
                     b.ToTable("users", (string)null);
                 });
 
@@ -137,26 +229,53 @@ namespace Api.Data.Migrations
                 {
                     b.HasOne("Api.Domain.Entities.AddressEntity", "Address")
                         .WithMany()
-                        .HasForeignKey("Id")
+                        .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Api.Domain.Entities.UserEntity", "user")
+                    b.HasOne("Api.Domain.Entities.ProductCategoryEntity", "ProductCategory")
                         .WithMany()
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ProductCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Api.Domain.Entities.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Address");
 
-                    b.Navigation("user");
+                    b.Navigation("ProductCategory");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Api.Domain.Entities.ReviewEntity", b =>
+                {
+                    b.HasOne("Api.Domain.Entities.ProductEntity", "ProductReview")
+                        .WithMany()
+                        .HasForeignKey("ProductReviewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Api.Domain.Entities.UserEntity", "UserReview")
+                        .WithMany()
+                        .HasForeignKey("UserReviewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductReview");
+
+                    b.Navigation("UserReview");
                 });
 
             modelBuilder.Entity("Api.Domain.Entities.UserEntity", b =>
                 {
                     b.HasOne("Api.Domain.Entities.AddressEntity", "Address")
                         .WithMany()
-                        .HasForeignKey("Id")
+                        .HasForeignKey("IdAddress")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Api.Domain.Entities;
 
 namespace Api.Domain.Entities
 {
     public class CartEntity
     {
-        public List<ProductEntity> Products { get; set; }
+        public bool Purchased { get; set; }
+        public List<itemsEntity> Items { get; set; } = new List<itemsEntity>();
+        public decimal TotalPrice { get; set; }
         public UserEntity User { get; set; }
+        public Guid UserId { get; set; }
     }
 }

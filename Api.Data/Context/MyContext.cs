@@ -20,11 +20,15 @@ namespace Api.Data.Context
             modelBuilder.Entity<UserEntity>().ToTable("Users");
             modelBuilder.Entity<AddressEntity>().ToTable("Addresses");
             modelBuilder.Entity<ProductEntity>().ToTable("Products");
+            modelBuilder.Entity<ProductCategoryEntity>().ToTable("ProductCategories");
+            modelBuilder.Entity<ReviewEntity>().ToTable("Reviews");
 
             // Apply entity mappings
             modelBuilder.ApplyConfiguration(new UserMap());
             modelBuilder.ApplyConfiguration(new AddressMap());
             modelBuilder.ApplyConfiguration(new ProductMap());
+            modelBuilder.ApplyConfiguration(new ProductCategoryMap());
+            modelBuilder.ApplyConfiguration(new ReviewMap());
         }
 
     }

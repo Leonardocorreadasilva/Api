@@ -13,46 +13,67 @@ namespace Api.Service.Service
 {
     public class AddressService : IAddressService
     {
-        private readonly IRepository<AddressEntity> GetAll;
-        public AddressService(IRepository<AddressEntity> addressRepository) 
+        private readonly IRepository<AddressEntity> _addressRepository;
+        public AddressService(IRepository<AddressEntity> addressRepository)
         {
-            GetAll = addressRepository;
+            _addressRepository = addressRepository;
         }
 
         public async Task<AddressEntity> GetByCodeAndNumber(string postalCode, int number)
         {
-            var addresses = await GetAll.SelectAsync();
+            var addresses = await _addressRepository.SelectAsync();
 
             // Retornará null se não encontrar nenhum endereço correspondente
             return addresses.FirstOrDefault(address => address.PostalCode == postalCode && address.Number == number);
         }
-        async Task<IEnumerable<AddressEntity>> IAddressService.GetAll()
+
+        public async Task<IEnumerable<AddressEntity>> GetAll()
         {
-            return await GetAll.SelectAsync();
+            return await _addressRepository.SelectAsync();
         }
 
-        Task<bool> IAddressService.Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            return await _addressRepository.DeleteAsync(id);
         }
 
-         async Task<AddressEntity> IAddressService.Get(Guid id)
+        public async Task<AddressEntity> Get(Guid id)
         {
-            return await GetAll.SelectAsync(id);
+            return await _addressRepository.SelectAsync(id);
         }
 
-        
-
-
-
-        Task<AddressEntity> IAddressService.Post(AddressRequest address)
+        public async Task<AddressEntity> Post(AddressRequest addressRequest)
         {
-            throw new NotImplementedException();
+            var address = new AddressEntity
+            {
+                Id = Guid.NewGuid(),
+                PostalCode = addressRequest.PostalCode,
+                Street = addressRequest.Street,
+                Number = addressRequest.Number,
+                City = addressRequest.City,
+                State = addressRequest.State,
+                Country = addressRequest.Country
+            };
+
+            return await _addressRepository.InsertAsync(address);
         }
 
-        Task<AddressEntity> IAddressService.Put(AddressRequest address)
+        public async Task<AddressEntity> Put(AddressRequest addressRequest)
         {
-            throw new NotImplementedException();
+            var address = await _addressRepository.SelectAsync(addressRequest.Id);
+            if (address == null)
+            {
+                throw new ArgumentException("Endereço não encontrado.");
+            }
+
+            address.PostalCode = addressRequest.PostalCode;
+            address.Street = addressRequest.Street;
+            address.Number = addressRequest.Number;
+            address.City = addressRequest.City;
+            address.State = addressRequest.State;
+            address.Country = addressRequest.Country;
+
+            return await _addressRepository.UpdateAsync(address);
         }
     }
 }

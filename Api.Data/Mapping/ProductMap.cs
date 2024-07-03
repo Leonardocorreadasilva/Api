@@ -26,15 +26,23 @@ namespace Api.Data.Mapping
                    .IsRequired()
                    .HasColumnType("decimal(18,2)");
 
-            builder.HasOne(u => u.user)
-                .WithMany()
-                .HasForeignKey(u => u.Id)
-                .IsRequired();
+            // Corrigindo a configuração para a relação com UserEntity
+            builder.HasOne(p => p.User) // Ajuste na propriedade para seguir a convenção de nomenclatura
+                   .WithMany() // Aqui você pode especificar a propriedade de navegação inversa se houver
+                   .HasForeignKey(p => p.UserId) // Usando UserId como FK
+                   .IsRequired();
 
-            builder.HasOne(u => u.Address)
-                .WithMany()
-                .HasForeignKey(u => u.Id)
-                .IsRequired();
+            // Corrigindo a configuração para a relação com AddressEntity
+            builder.HasOne(p => p.Address)
+                   .WithMany() // Aqui você pode especificar a propriedade de navegação inversa se houver
+                   .HasForeignKey(p => p.AddressId) // Usando AddressId como FK
+                   .IsRequired();
+
+
+            builder.HasOne(p => p.ProductCategory)
+                   .WithMany()
+                   .HasForeignKey(p => p.ProductCategoryId)
+                   .IsRequired();
         }
     }
 }
