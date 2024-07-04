@@ -14,6 +14,7 @@ A API fornece recursos para gerenciar os seguintes dados:
 - Categorias de Produtos: Criacao de categorias de produtos, listagem de categorias e produtos nelas
 - Pedidos: Itens do pedido, status do pedido (pendente, em processamento, enviado, entregue, cancelado), forma de pagamento, histórico de rastreamento
 - Review: Avaliacao dos produtos
+- Compra: Eh possivel comprar e buscar compras de itens
 
 ## Operações
 As operações CRUD podem ser realizadas em cada recurso usando os seguintes métodos HTTP:
