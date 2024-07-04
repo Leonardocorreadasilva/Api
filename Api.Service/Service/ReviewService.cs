@@ -59,7 +59,7 @@ namespace Api.Service.Service
                 UserReview = user,
                 ProductReview = product,
                 Rating = review.Rating,
-                Coments = review.Comments,
+                Coments = review.Coments,
                 Reviews = review.Reviews
             };
 
@@ -89,7 +89,7 @@ namespace Api.Service.Service
             existingReview.UserReview = user;
             existingReview.ProductReview = product;
             existingReview.Rating = review.Rating;
-            existingReview.Coments = review.Comments;
+            existingReview.Coments = review.Coments;
             existingReview.Reviews = review.Reviews;
 
             return await _reviewRepository.UpdateAsync(existingReview);

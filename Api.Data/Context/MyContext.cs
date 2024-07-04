@@ -22,6 +22,7 @@ namespace Api.Data.Context
             modelBuilder.Entity<ProductEntity>().ToTable("Products");
             modelBuilder.Entity<ProductCategoryEntity>().ToTable("ProductCategories");
             modelBuilder.Entity<ReviewEntity>().ToTable("Reviews");
+            modelBuilder.Entity<itemsEntity>().ToTable("Items");
 
             // Apply entity mappings
             modelBuilder.ApplyConfiguration(new UserMap());
@@ -29,6 +30,7 @@ namespace Api.Data.Context
             modelBuilder.ApplyConfiguration(new ProductMap());
             modelBuilder.ApplyConfiguration(new ProductCategoryMap());
             modelBuilder.ApplyConfiguration(new ReviewMap());
+            modelBuilder.ApplyConfiguration(new ItemsMap());
         }
 
     }

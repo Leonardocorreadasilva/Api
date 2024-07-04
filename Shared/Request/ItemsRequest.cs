@@ -1,10 +1,14 @@
-﻿namespace Api.Domain.Entities
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Shared.Request
 {
-    public class itemsEntity: BaseEntity
+    public class ItemsRequest
     {
-        public ProductEntity Product { get; set; }
         public Guid ProductId { get; set; }
-        public UserEntity User { get; set; }
         public Guid UserId { get; set; }
         public int Quantity { get; set; }
         public bool Purchased { get; set; }

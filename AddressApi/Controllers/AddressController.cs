@@ -81,7 +81,7 @@ namespace Api.Application.Controllers
                 var address = await _addressService.Post(addressRequest);
                 if (address != null)
                 {
-                    return CreatedAtRoute("GetWithId", new { id = address.Id }, address);
+                    return CreatedAtAction(nameof(Get), new { id = address.Id }, address);
                 }
                 else
                 {

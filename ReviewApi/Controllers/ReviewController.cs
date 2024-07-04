@@ -18,7 +18,7 @@ namespace ReviewApi.Controllers
             _reviewService = reviewService;
         }
 
-        [HttpGet("{id}/v1/GetWithId")]
+        [HttpGet("v1/GetWithId/{id}")]
         public async Task<ActionResult> Get(Guid id)
         {
             try
@@ -50,7 +50,7 @@ namespace ReviewApi.Controllers
             }
         }
 
-        [HttpDelete("{id}/v1/GetWithId")]
+        [HttpDelete("v1/Delete/{id}")]
         public async Task<ActionResult> Delete(Guid id)
         {
             try
@@ -68,12 +68,12 @@ namespace ReviewApi.Controllers
             }
         }
         [HttpPost("v1/Post")]
-        public async Task<ActionResult> Post(ReviewRequest review)
+        public async Task<ActionResult> Post([FromBody] ReviewRequest review)
         {
             try
             {
                 var createdReview = await _reviewService.Post(review);
-                return CreatedAtRoute("GetWithId", new { id = createdReview.Id }, createdReview);
+                return CreatedAtAction(nameof(Get), new { id = createdReview.Id }, createdReview);
             }
             catch (ArgumentException ex)
             {
@@ -82,8 +82,8 @@ namespace ReviewApi.Controllers
         }
 
         [HttpPut("v1/Put")]
-        public async Task<ActionResult> Put(ReviewRequest review)
-        {
+        public async Task<ActionResult> Put([FromBody] ReviewRequest review)
+            {
             try
             {
                 var updatedReview = await _reviewService.Put(review);

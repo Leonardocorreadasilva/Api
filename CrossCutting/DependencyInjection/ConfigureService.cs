@@ -21,6 +21,7 @@ namespace CrossCutting.DependencyInjection
             serviceCollecion.AddScoped<IProductService, ProductService>();
             serviceCollecion.AddScoped<IProductCategory, ProductCategoryService>();
             serviceCollecion.AddScoped<IReviewService, ReviewService>();
+            serviceCollecion.AddScoped<IItemsService, ItemsService>();
         }
     }
 }

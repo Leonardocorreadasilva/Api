@@ -82,8 +82,15 @@ namespace ProductCategoryApi.Controllers
             }
             try
             {
-                await _productCategoryService.Put(category);
-                return NoContent();
+                var result = await _productCategoryService.Put(category);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
             catch (ArgumentException ex)
             {
@@ -101,7 +108,7 @@ namespace ProductCategoryApi.Controllers
                 {
                     return NotFound();
                 }
-                return NoContent();
+                return Ok(success);
             }
             catch (ArgumentException ex)
             {

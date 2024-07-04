@@ -8,11 +8,18 @@ namespace Api.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController(IProductService productService) : ControllerBase
+    public class ProductController : ControllerBase
     {
-        private readonly IProductService _productService = productService;
+        private readonly IProductService _productService;
+        private readonly IItemsService _itemsService;
 
-        [HttpGet("{id}/v1/GetWithId")]
+        public ProductController(IProductService productService, IItemsService itemsService)
+        {
+            _productService = productService;
+            _itemsService = itemsService;
+        }
+
+        [HttpGet("v1/GetWithId/{id}")]
         public async Task<ActionResult> Get(Guid id)
         {
             try
@@ -23,42 +30,6 @@ namespace Api.Application.Controllers
                     return NotFound();
                 }
                 return Ok(product);
-            }
-            catch (ArgumentException ex)
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
-
-        [HttpGet("v1/GetAll")]
-        public async Task<ActionResult> GetAll()
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            try
-            {
-                var products = await _productService.GetAll();
-                return Ok(products);
-            }
-            catch (ArgumentException ex)
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
-            }
-        }
-
-        [HttpDelete("{id}/v1/Delete")]
-        public async Task<ActionResult> Delete(Guid id)
-        {
-            try
-            {
-                var result = await _productService.Delete(id);
-                if (!result)
-                {
-                    return NotFound();
-                }
-                return Ok(result);
             }
             catch (ArgumentException ex)
             {
@@ -78,7 +49,7 @@ namespace Api.Application.Controllers
                 var result = await _productService.Create(product);
                 if (result != null)
                 {
-                    return CreatedAtRoute("v1/GetWithId", new { id = result.Id }, result);
+                    return CreatedAtAction(nameof(Get), new { id = result.Id }, result);
                 }
                 else
                 {
@@ -91,8 +62,42 @@ namespace Api.Application.Controllers
             }
         }
 
+        [HttpGet("v1/GetAll")]
+        public async Task<ActionResult> GetAll()
+        {
+            try
+            {
+                var products = await _productService.GetAll();
+                return Ok(products);
+            }
+            catch (ArgumentException ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpDelete("v1/Delete/{id}")]
+        public async Task<ActionResult> Delete(Guid id)
+        {
+            try
+            {
+                var result = await _productService.Delete(id);
+                if (!result)
+                {
+                    return NotFound();
+                }
+                return Ok(result);
+            }
+            catch (ArgumentException ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        
+
         [HttpPut("v1/Put")]
-        public async Task<ActionResult> Put(ProductEntity product)
+        public async Task<ActionResult> Put([FromBody] ProductRequest product)
         {
             if (!ModelState.IsValid)
             {
@@ -109,6 +114,49 @@ namespace Api.Application.Controllers
                 {
                     return BadRequest();
                 }
+            }
+            catch (ArgumentException ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+
+        [HttpPost("v1/Purchase")]
+        public async Task<ActionResult> Purchase(ItemsRequest Items)
+        {
+            try
+            {
+                var success = await _itemsService.Purchase(Items);
+                return Ok(success); // Corrigido aqui
+            }
+            catch (ArgumentException ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("v1/Purchase/GetAll")]
+        public async Task<ActionResult> GetPurchase()
+        {
+            try
+            {
+                var success = await _itemsService.GetAll();
+                return Ok(success); // Corrigido aqui
+            }
+            catch (ArgumentException ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("v1/Purchase/GetWithId/{id}")]
+        public async Task<ActionResult> GetPurchaseWithId(Guid id)
+        {
+            try
+            {
+                var success = await _itemsService.Get(id);
+                return Ok(success); // Corrigido aqui
             }
             catch (ArgumentException ex)
             {

@@ -40,24 +40,49 @@ namespace Api.Service.Service
             return await productService.InsertAsync(product);
         }
 
-        public async Task<ProductEntity> Edit(ProductEntity product)
+        public async Task<ProductEntity> Edit(ProductRequest productRequest)
         {
+            // Verificar se o produto existe
+            var productToUpdate = await productService.SelectAsync(productRequest.Id);
+            if (productToUpdate == null)
+            {
+                throw new Exception("Produto não encontrado.");
+            }
+
             // Verificar se o usuário associado ao produto existe
-            var userExists = await userService.SelectAsync(product.User.Id);
+            var userExists = await userService.SelectAsync(productRequest.UserId);
             if (userExists == null)
             {
                 throw new Exception("Usuário não encontrado.");
             }
 
             // Verificar se o endereço associado ao produto existe
-            var addressExists = await addressRepository.SelectAsync(product.Address.Id);
+            var addressExists = await addressRepository.SelectAsync(productRequest.AddressId);
             if (addressExists == null)
             {
                 throw new Exception("Endereço não encontrado.");
             }
 
+            // Verificar se a categoria do produto existe
+            var categoryExists = await category.SelectAsync(productRequest.ProductCategoryId);
+            if (categoryExists == null)
+            {
+                throw new Exception("Categoria do produto não encontrada.");
+            }
+
+            // Atualizar as propriedades do produto
+            productToUpdate.Name = productRequest.Name;
+            productToUpdate.Description = productRequest.Description;
+            productToUpdate.Price = productRequest.Price;
+            productToUpdate.Stock = productRequest.Stock;
+            productToUpdate.User = userExists;
+            productToUpdate.Address = addressExists;
+            productToUpdate.ProductCategory = categoryExists;
+
             // Aqui você pode adicionar validações ou lógicas adicionais antes de atualizar o produto
-            return await productService.UpdateAsync(product);
+
+            // Atualizar o produto no banco de dados
+            return await productService.UpdateAsync(productToUpdate);
         }
 
         public async Task<bool> Delete(Guid id)

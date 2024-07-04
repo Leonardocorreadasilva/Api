@@ -12,7 +12,7 @@ namespace Api.Domain.Interface.Service.Product
     {
         //Task<ProductEntity> Rating(ProductEntity product);
         Task<ProductEntity> Create(ProductRequest produto);
-        Task<ProductEntity> Edit(ProductEntity product);
+        Task<ProductEntity> Edit(ProductRequest product);
         Task<ProductEntity> Get(Guid id);
         Task<IEnumerable<ProductEntity>> GetAll();
         Task<bool> Delete(Guid id);
